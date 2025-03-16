@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+      <html lang="en" class="no-js">
+         <head>
+            <title>Open Pediatrics</title>
+            <meta charset="UTF-8">
+            <meta name="description" content="">
+            <meta name="keywords" content="">
+            <meta name="author" content="">
+            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <link rel="stylesheet" href="{% static "css/plugins.css" %}">
+            <link rel="stylesheet" href="{% static "css/style.css" %}">
+         </head>
+         <body>
+            {% include "modals/login.html" %}
+            {% include "modals/register.html" %}
+
+            {% include "layouts/header.html" %}
+
+            {% block content %}{% endblock content %}
+            
+            {% include "layouts/footer.html" %}
+
+            <script src="{% static "js/jquery.js" %}"></script>
+            <script src="{% static "js/plugins.js" %}"></script>
+            <script src="{% static "js/plugins2.js" %}"></script>
+            <script src="{% static "js/custom.js" %}"></script>
+         </body>
+      </html>
