@@ -6,6 +6,16 @@ from taggit.managers import TaggableManager
 from project.models import Director, Actor
 from shortuuid.django_fields import ShortUUIDField
 
+
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return (
+            super().get_queryset().filter(status=Movie.Status.PUBLISHED)
+        )
+
+
+
+
 class Movie(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
@@ -25,6 +35,9 @@ class Movie(models.Model):
 
     genres = TaggableManager
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.DRAFT)
+
+    objects = models.Manager()
+    published = PublishedManager() #
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

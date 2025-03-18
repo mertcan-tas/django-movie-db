@@ -9,10 +9,8 @@ __pycache__/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media/
-nudenet.py
-2.jpg
-.docker-note
+
+
 tt.json
 logs/
 ### Django.Python Stack ###

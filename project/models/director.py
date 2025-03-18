@@ -6,9 +6,6 @@ class Director(models.Model):
     bio = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
     photo = models.ImageField(upload_to='directors/', null=True, blank=True)
-    
+
     def __str__(self):
         return self.name
-    
-    def get_absolute_url(self):
-        return reverse('director-detail', args=[str(self.id)])
