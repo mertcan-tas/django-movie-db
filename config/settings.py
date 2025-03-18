@@ -1,24 +1,17 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = config('SECRET_KEY')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ow@98sbyqqjgi6a@o_g!)5lo2z^3h^en$9=u5)*y^=1ay8j6oc'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-
-# Application definition
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -27,14 +20,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+]
+
+THIRD_PARTY_APPS = [
+    "storages",
 ]
 
 PROJECT_APPS = [
-    'project.apps.ProjectConfig',
+    'project',
+    'testing'
 ]
 
-INSTALLED_APPS += PROJECT_APPS
-
+INSTALLED_APPS += PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,20 +65,41 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("POSTGRES_DB"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASSWORD"),
+        "HOST": config("POSTGRES_HOST"),
+        "PORT": config("POSTGRES_PORT"),
+    },
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f'redis://:{config('REDIS_PASSWORD')}@{config('REDIS_HOST')}/{config('REDIS_DB')}',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "max_connections": 200,
+            },
+            "SOCKET_TIMEOUT": 1.5,
+            "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
+            "COMPRESS_LEVEL": 4,
+            "COMPRESS_MIN_LENGTH": 1024,
+            "SERIALIZER": "django_redis.serializers.msgpack.MSGPackSerializer",
+            "HEALTH_CHECK_INTERVAL": 30,
+            "PERSISTENT": True,
+        },
+        "KEY_PREFIX": "anlastik",
+        "VERSION": 1
+    }
+}
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -96,10 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -107,7 +123,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 
 STATICFILES_DIRS = [
